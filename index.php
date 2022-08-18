@@ -2,7 +2,7 @@
   session_start();
 
   // cek tidak ada session login
-  if(!isset($_SESSION['Login'])) {
+  if( !isset($_SESSION['Login']) ) {
     header("Location: login.php");
     exit;
   }
@@ -10,8 +10,16 @@
   // menghubungkan file index dgn file function
   require 'functions.php';
 
+  // pagination
+  // konfigurasi
+  $jumlahDataPerHalaman = 5;
+  $jumlahData = count(query("SELECT * FROM handphones"));
+  $jumlahHalaman = ceil($jumlahData / $jumlahDataPerHalaman);
+  $halamanAktif = (isset($_GET['halaman'])) ? $_GET['halaman'] : 1;
+  $awalData = ($jumlahDataPerHalaman * $halamanAktif) - $jumlahDataPerHalaman; // awalData = index datanya
+
   // menjalankan fungsi query ke table di database, hasilnya simpan kedalam variabel
-  $handphones = query("SELECT * FROM handphones");
+  $handphones = query("SELECT * FROM handphones LIMIT $awalData, $jumlahDataPerHalaman");
 
   // ketika tombol cari diklik
   if(isset($_POST['cari'])) {
@@ -83,7 +91,7 @@
               <?php $i = 1 ?>
               <?php foreach ($handphones as $row) : ?>
                 <tr>
-                  <td><?= $i; ?></td>
+                  <td><?= $i + $awalData; ?></td>
                   <td>
                     <a href="ubah.php?id=<?= $row['ID']; ?>" class="badge bg-warning text-light" style="text-decoration: none;">Ubah</a> 
                     <a href="hapus.php?id=<?= $row['ID']; ?>" onclick="return confirm('Yakin ingin menghapus data handphone ini?');" class="badge bg-danger" style="text-decoration: none;">Hapus</a>
@@ -98,13 +106,43 @@
               <?php endforeach; ?>
             </tbody>
           </table>
-
         </div>
       </div>
     </div>
   </div>
+
+  <br>
   
-  
+  <!-- NAVIGASI -->
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+
+      <?php if($halamanAktif > 1) : ?>
+        <li class="page-item">
+          <a class="page-link" href="?halaman=<?= $halamanAktif - 1; ?>" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+      <?php endif; ?>
+
+      <?php for($i = 1; $i <= $jumlahHalaman; $i++) : ?>
+        <?php if($i == $halamanAktif) : ?>
+          <li class="page-item active"><a class="page-link" href="?halaman=<?= $i; ?>"><?= $i; ?></a></li>
+        <?php else : ?>
+          <li class="page-item"><a class="page-link" href="?halaman=<?= $i; ?>"><?= $i; ?></a></li>
+        <?php endif; ?>
+      <?php endfor; ?>
+
+      <?php if($halamanAktif < $jumlahHalaman) : ?>
+        <li class="page-item">
+          <a class="page-link" href="?halaman=<?= $halamanAktif + 1; ?>" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      <?php endif; ?>
+
+    </ul>
+  </nav>
 
 </body>
 </html>

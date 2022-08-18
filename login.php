@@ -5,7 +5,7 @@
   // cek cookie
   if(isset($_COOKIE['ID']) && isset($_COOKIE['Key'])) {
     $id = $_COOKIE['ID'];
-    $key = $_COOKIE['Key'];
+    $key = $_COOKIE['Key']; // sudah dihash atau dienkripsi
 
     // ambil username berdasarkan id
     $result = mysqli_query($conn, "SELECT Username FROM user WHERE ID = $id");
@@ -15,8 +15,8 @@
     if($key === hash('sha256', $row['Username'])) {
       $_SESSION['Login'] = true;
     }
-
   }
+
 
   // kalau sudah ada session login
   if(isset($_SESSION['Login'])) {
@@ -38,13 +38,12 @@
       // cek password
       $row = mysqli_fetch_assoc($result);
       if(password_verify($password, $row['Password'])) {
-        // set session
+        // set session variabel login = true, jika ada username dan password match di db
         $_SESSION['Login'] = true;
 
-        // cek remember me
+        // jika checkbox remember me diceklis
         if(isset($_POST['Remember'])) {
           // buat cookie
-
           setcookie('ID', $row['ID'], time()+3600);
           setcookie('Key', hash('sha256', $row['Username']), time()+3600);
         }
@@ -55,7 +54,6 @@
     }
 
   $error = true;
-
   }
 
 ?>
@@ -102,5 +100,6 @@
     <br><br>
     <p>Belum punya akun? Buat akun baru <a href="registrasi.php">disini</a></p>
   </form>
+
 </body>
 </html>

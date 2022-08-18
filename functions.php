@@ -15,8 +15,10 @@
     return $rows;
   }
 
+    
   function tambah($data) {
     global $conn;
+
     // ambil data dari tiap elemen dalam form
     $nama = htmlspecialchars($data["Nama"]);
     $produsen = htmlspecialchars($data["Produsen"]);
@@ -38,6 +40,7 @@
 
     return mysqli_affected_rows($conn);
   }
+
 
   // Upload file gambar
   function upload() {
@@ -74,7 +77,7 @@
     }
 
     // lolos pengecekan, gambar siap diupload
-    // generate nama baru
+    // generate nama baru ke db untuk menghindari nama file yg sama
     $namaFileBaru = uniqid();
     $namaFileBaru .= '.';
     $namaFileBaru .= $ekstensiGambar;
@@ -82,8 +85,8 @@
     move_uploaded_file($tmpName, 'img/' . $namaFileBaru);
 
     return $namaFileBaru;
-
   }
+
 
   function hapus($id) {
     global $conn;
@@ -91,6 +94,7 @@
 
     return mysqli_affected_rows($conn);
   }
+
 
   function ubah($data) {
     global $conn;
@@ -104,9 +108,9 @@
 
     // cek apakah user upload gambar baru atau tidak
     if($_FILES['Gambar']['error'] === 4) {
-      $gambar = $gambarLama;
+      $gambar = $gambarLama; // kalau tidak pilih gambar baru
     } else {
-      $gambar = upload();
+      $gambar = upload(); // kalau pilih gambar baru
     }
 
     // query insert data
@@ -123,6 +127,7 @@
     return mysqli_affected_rows($conn);
   }
 
+
   function cari($keyword) {
     $query = "SELECT * FROM handphones
                 WHERE
@@ -133,6 +138,7 @@
               ";
     return query($query);
   }
+
 
   function registrasi($data) {
     global $conn;
@@ -145,7 +151,7 @@
     $result = mysqli_query($conn, "SELECT username FROM user WHERE username = '$username'");
     if( mysqli_fetch_assoc($result)) {
       echo "<script>
-              alert('Username yang dipilih sudah terdaftar, silahkan pilih username lain');
+              alert('Username sudah terdaftar, silahkan pilih username lain');
             </script>";
       return false;
     }
