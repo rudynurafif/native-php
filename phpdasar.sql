@@ -51,7 +51,7 @@ INSERT INTO `handphones` (`ID`, `Nama`, `Produsen`, `OS`, `Harga`, `Gambar`) VAL
 (8, 'iPhone 8', 'Apple', 'iOS', 'IDR 8.000.000', 'iphone8.jpg'),
 (9, 'Xiaomi Redmi Note 3', 'Xiaomi', 'Android', 'IDR 1.999.000', 'redminote3.jpg'),
 (10, 'Poco F1', 'Xiaomi', 'Android', 'IDR 5.100.000', 'pocof1.jpg'),
-(22, 'Vivo Y5', 'Vivo', 'Android', 'IDR 3.000.000', '61d1ebfda86cd.jpg');
+(11, 'Vivo Y5', 'Vivo', 'Android', 'IDR 3.000.000', '61d1ebfda86cd.jpg');
 
 -- --------------------------------------------------------
 
